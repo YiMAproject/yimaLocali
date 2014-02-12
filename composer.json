@@ -1,0 +1,43 @@
+{
+    "name": "rayamedia/yima-locali",
+    "type": "yima-core-module",
+    "description": "Detection of locale through different strategies, include features for multilingual DB`s(translatable fields) plus CLDR data for full system localization of data, and many predefined useful locale helpers.",
+    "keywords": [
+        "localization",
+        "multi lingual",
+        "locale",
+        "languages",
+        "zf2 module",
+        "zf2",
+        "yima",
+        "raya media"
+    ],
+    "authors": [
+        {
+            "name": "Payam Naderi",
+            "email": "naderi.payam@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "rayamedia/yima-plugin-installer": "dev-master"
+    },
+    "extra": {
+        "yima-plugin-name": "yimaLocali"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "yimaLocali\\" : "src/"
+        },
+        "classmap" : [
+            "./Module.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.raya-media.com/"
+        }
+    ]
+}
