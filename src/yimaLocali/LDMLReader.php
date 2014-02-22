@@ -55,7 +55,7 @@ class LDMLReader
     	}
     	
     	if (false == $locale->isValidLocale()) {
-    		throw new Exception\InvalidLocaleException(sprintf(
+    		throw new \Exception(sprintf(
     			'The Locale "%s" not universe valid locale.', $locale
     		));
     	}
@@ -669,7 +669,7 @@ class LDMLReader
     			break;
     
     		default :
-    			throw new Exception\InvalidLdmlPathException("Unknown list ($path) for parsing locale data.");
+    			throw new \Exception("Unknown list ($path) for parsing locale data.");
     			break;
     	}
     
@@ -727,7 +727,7 @@ class LDMLReader
     	if (empty(self::$_ldml[(string) $locale])) {
     		$filename = dirname(__FILE__) . '/CLDR/' . $locale . '.xml';
     		if (!file_exists($filename)) {
-    			throw new Exception\LdlmXmlNotFound("Missing locale file '$filename' for '$locale' locale.");
+    			throw new \Exception("Missing locale file '$filename' for '$locale' locale.");
     		}
     
     		self::$_ldml[(string) $locale] = simplexml_load_file($filename);

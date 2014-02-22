@@ -3,7 +3,6 @@ namespace yimaLocali\Mvc\Service;
 
 use Zend\Mvc\Service\AbstractPluginManagerFactory;
 
-use Zend\Mvc\Exception;
 use Zend\ServiceManager\ConfigInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -29,7 +28,7 @@ class PluginManagerFactory extends AbstractPluginManagerFactory
                 $config = new $configClass;
 
                 if (!$config instanceof ConfigInterface) {
-                    throw new Exception\RuntimeException(sprintf(
+                    throw new \Exception(sprintf(
                         'Invalid service manager configuration class provided; received "%s", expected class implementing %s',
                         $configClass,
                         'Zend\ServiceManager\ConfigInterface'

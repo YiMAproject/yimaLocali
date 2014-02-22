@@ -122,13 +122,13 @@ class TranslatableFeature extends AbstractFeature
 		// get locale from serviceLocator
 		/* $tableGateway = $this->tableGateway;
 		if (! $tableGateway instanceof ServiceLocatorAwareInterface) {
-			throw new Exception\RuntimeException(sprintf(
+			throw new \Exception(sprintf(
 				'Default Locale is empty, Table "%s" must instanceof ServiceLocatorAwareInterface to detect locale.'
 			));
 		}
 		$sl = $tableGateway->getServiceLocator();
 		if (! $sl->has('locale') ) {
-			throw new Exception\RuntimeException(sprintf(
+			throw new \Exception(sprintf(
 				'Default Locale is empty, Locale Service not found in serviceLocator.'
 			));
 		}
@@ -154,12 +154,12 @@ class TranslatableFeature extends AbstractFeature
 		 */
 		if (is_object($tableGateway)) {
 			if (!$tableGateway instanceof AbstractTableGateway) {
-				throw new Exception\RuntimeException(sprintf(
+				throw new \Exception(sprintf(
 					'Translation Table must instance of "AbstractTableGateway" but "%s" given.'
 				),get_class($tableGateway));
 			}
 		} else {
-			throw new Exception\RuntimeException(sprintf(
+			throw new \Exception(sprintf(
 				'Translation Table must instance of "AbstractTableGateway" but "%s" given.'
 			),gettype($tableGateway));
 		}
@@ -216,7 +216,7 @@ class TranslatableFeature extends AbstractFeature
 		}
 		
 		if (! is_array($fields) ) {
-			throw new Exception\InvalidArgumentException(sprintf(
+			throw new \Exception(sprintf(
 				'%s expects an array, or object implementing Traversable or Array; received "%s"',
 				$method,
 				(is_object($fields) ? get_class($fields) : gettype($fields))
@@ -570,7 +570,7 @@ class TranslatableFeature extends AbstractFeature
 		}
 		
 		if ($pkc === null) {
-			throw new Exception\RuntimeException('A primary key for this column could not be found in the metadata.');
+			throw new \Exception('A primary key for this column could not be found in the metadata.');
 		}
 		
 		if (count($pkc->getColumns()) == 1) {

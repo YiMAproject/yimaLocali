@@ -2,7 +2,6 @@
 namespace yimaLocali\Detector\Strategy;
 
 use yimaLocali\Detector\AbstractDetector;
-use yimaLocali\Exception;
 use yimaLocali\Detector\Feature\SetProgrammabilityLocaleInterface;
 
 use Zend\Console\Console;
@@ -55,7 +54,7 @@ class CookieStrategy extends AbstractDetector implements
     /**
      * @param string $locale, null for proxy to resetLocale
      * 
-     * @throws Exception\InvalidLocaleException
+     * @throws \Exception
      */
     public function setLocale($locale)
     {
@@ -66,7 +65,7 @@ class CookieStrategy extends AbstractDetector implements
     	
     	$locale = (string) $locale;
     	if (false == $this->isValidLocale($locale) && !empty($locale)) {
-    		throw new Exception\InvalidLocaleException(sprintf(
+    		throw new \Exception(sprintf(
     			'The Locale "%s" not supported and are invalid.', $locale
     		));
     	}

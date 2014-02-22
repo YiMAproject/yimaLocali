@@ -87,7 +87,7 @@ class LocalePluginManager extends AbstractPluginManager
             return;
         }
 
-        throw new Exception\RuntimeException(sprintf(
+        throw new \Exception(sprintf(
             'Plugin of type %s is invalid; must implement %s\LocalePluginInterface',
             (is_object($plugin) ? get_class($plugin) : gettype($plugin)),
             __NAMESPACE__

@@ -140,7 +140,7 @@ class Locale
 	{
 		if ($this->allowValidLocale) {
 			if (false == $this->isValidLocale( (string) $locale) ) {
-				throw new Exception\InvalidLocaleException(sprintf(
+				throw new \Exception(sprintf(
     				'The Locale "%s" not universe valid locale.', $locale
     			));
 			}
@@ -216,13 +216,13 @@ class Locale
 	 * Set plugin manager instance
 	 *
 	 * @param  string|LocalePluginManager $helpers
-	 * @throws Exception\InvalidArgumentException
+	 * @throws \Exception
 	 */
 	public function setPluginManager($helpers)
 	{
 		if (is_string($helpers)) {
 			if (!class_exists($helpers)) {
-				throw new Exception\InvalidArgumentException(sprintf(
+				throw new \Exception(sprintf(
 					'Invalid helper helpers class provided (%s)',
 					$helpers
 				));
@@ -230,7 +230,7 @@ class Locale
 			$helpers = new $helpers();
 		}
 		if (!$helpers instanceof LocalePluginManager) {
-			throw new Exception\InvalidArgumentException(sprintf(
+			throw new \Exception(sprintf(
 				'Helper helpers must extend Zend\View\HelperPluginManager; got type "%s" instead',
 				(is_object($helpers) ? get_class($helpers) : gettype($helpers))
 			));
