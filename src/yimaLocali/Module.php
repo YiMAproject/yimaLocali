@@ -43,7 +43,7 @@ class Module implements
     }
 
     /**
-     *
+     * Get Locale From Default Registered Detector Service
      *
      * @param MvcEvent $event
      *

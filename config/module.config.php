@@ -1,26 +1,42 @@
 <?php
 return array (
 	'yimaLocali' => array(
+        # Locale Detector Strategies, Implemented DetectorInterface
+		'detector' => array(
+            #  Used By Default AggregateStrategyFactory (yimaLocali.Detector.Strategy)
+            'aggregate' => array(
+                'strategies' => array(
+                    //'Registered\Service\Or\ClassName' => -10,
+                    # or
+                    /*
+                    array(
+                        'object'   => new StrategyObject(),
+                        'priority' => -10
+                    ),
+                    */
+
+                    // default ordered strategies
+                    'yimaLocali\Strategy\UriPathStrategy' => 90,
+                    'yimaLocali\Strategy\CookieStrategy'  => 80,
+                    /*
+                    array(
+                        'object'   => new \yimaLocali\Detector\Strategy\RestrictedLocaleStrategy(),
+                        'priority' => -1000
+                    ),
+                    */
+                ),
+            ),
+        ),
+
 		'default'    => 'en_US',
 		'supported'  => array(
-			'en_US', 
+			'en_US',
 			'fa_IR',
 		),
 		'aliases'    => array(
-			'en'    => 'en_US', 
+			'en'    => 'en_US',
 			'fa'    => 'fa_IR',
 			'farsi' => 'fa',
-		),
-		'strategies' => array(
-			# dar haalate restricted ['yimaLocali']['default'] be onvaane locale e konooni set mishavad
-			//-10 => 'yimaLocali\Strategy\RestrictedStrategy',
-			# or
-			/*
-			array(
-				'invokable' => 'yimaLocali\Strategy\RestrictedStrategy',
-				'priority'  => -10
-			),
-			*/
 		),
 		# if you need application have a detected locale to run, default false
 		'throw_exception' => false,
