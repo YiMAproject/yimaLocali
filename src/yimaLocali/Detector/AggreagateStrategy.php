@@ -1,15 +1,13 @@
 <?php
-namespace yimaLocali\Detector\Strategy;
+namespace yimaLocali\Detector;
 
 use Countable;
 use IteratorAggregate;
 use Zend\Stdlib\PriorityQueue;
-use yimaLocali\Detector\DetectorInterface;
-use yimaLocali\Detector\AbstractDetector;
 
 use yimaLocali\Detector\Feature\SystemUsableInterface;
 
-class AggreagateStrategy extends AbstractDetector implements 
+class AggreagateStrategy extends DetectorAbstract implements
 	SystemUsableInterface,
 	Countable, 
 	IteratorAggregate
@@ -22,7 +20,7 @@ class AggreagateStrategy extends AbstractDetector implements
 	/**
 	 * Last Detector found in Quee
 	 * 
-	 * @var yimaLocali\Detector\DetectorInterface
+	 * @var \yimaLocali\Detector\DetectorInterface
 	 */
 	protected $lastStrategyFound;
 

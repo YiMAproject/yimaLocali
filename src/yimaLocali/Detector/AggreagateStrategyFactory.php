@@ -1,7 +1,6 @@
 <?php
-namespace yimaLocali\Detector\Strategy;
+namespace yimaLocali\Detector;
 
-use yimaLocali\Detector\DetectorInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

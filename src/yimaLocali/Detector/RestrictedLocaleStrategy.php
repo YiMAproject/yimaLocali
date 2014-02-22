@@ -1,9 +1,7 @@
 <?php
-namespace yimaLocali\Detector\Strategy;
+namespace yimaLocali\Detector;
 
-use yimaLocali\Detector\AbstractDetector;
-
-class RestrictedLocaleStrategy extends AbstractDetector
+class RestrictedLocaleStrategy extends DetectorAbstract
 {
 	public function getLocale()
 	{

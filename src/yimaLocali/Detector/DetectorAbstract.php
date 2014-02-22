@@ -1,11 +1,9 @@
 <?php
 namespace yimaLocali\Detector;
 
-use yimaLocali\Detector\DetectorInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class AbstractDetector implements DetectorInterface
+class DetectorAbstract implements DetectorInterface
 {
 	protected $serviceLocator;
 	
@@ -151,8 +149,6 @@ class AbstractDetector implements DetectorInterface
 	public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
 	{
 		$this->serviceLocator = $serviceLocator;
-	
-		return $this;
 	}
 	
 	/**

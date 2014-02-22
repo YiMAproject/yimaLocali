@@ -1,7 +1,6 @@
 <?php
-namespace yimaLocali\Detector\Strategy;
+namespace yimaLocali\Detector;
 
-use yimaLocali\Detector\AbstractDetector;
 use yimaLocali\Detector\Feature\SetProgrammabilityLocaleInterface;
 
 use Zend\Console\Console;
@@ -10,7 +9,7 @@ use Zend\Http\Header\SetCookie;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Http\PhpEnvironment\Response as HttpResponse;
 
-class CookieStrategy extends AbstractDetector implements 
+class CookieStrategy extends DetectorAbstract implements
 	SetProgrammabilityLocaleInterface
 {
     const COOKIE_NAME = 'yimalocali_locale';
@@ -18,7 +17,7 @@ class CookieStrategy extends AbstractDetector implements
     /**
      * Request Object
      *
-     * @var Zend\Http\Request
+     * @var \Zend\Http\Request
      */
     protected $request;
     

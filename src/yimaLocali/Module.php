@@ -123,7 +123,8 @@ class Module implements
 		return array(
 			'factories' => array(
                 # default Locale Detector Strategy, implement DetectorInterface
-				'yimaLocali.Detector.Strategy' => 'yimaLocali\Detector\Strategy\AggreagateStrategyFactory',
+				'yimaLocali.Detector.Strategy' => 'yimaLocali\Detector\AggreagateStrategyFactory',
+
 				# managing plugin for locale object
 				'yimaLocali\PluginManager'   => 'yimaLocali\Mvc\Service\PluginManagerFactory',
 
@@ -131,15 +132,12 @@ class Module implements
 			),
 			'invokables' => array(
 				# Strategy factories
-				'yimaLocali\Strategy\RestrictedStrategy'         => 'yimaLocali\Detector\Strategy\RestrictedLocaleStrategy',
-				'yimaLocali\Strategy\CookieStrategy'             => 'yimaLocali\Detector\Strategy\CookieStrategy',
-				'yimaLocali\Strategy\HostStrategy'               => 'yimaLocali\Detector\Strategy\HostStrategy',
-				'yimaLocali\Strategy\UriPathStrategy'            => 'yimaLocali\Detector\Strategy\UriPathStrategy',
-				'yimaLocali\Strategy\QueryStrategy'              => 'yimaLocali\Detector\Strategy\QueryStrategy',
-				'yimaLocali\Strategy\HttpAcceptLanguageStrategy' => 'yimaLocali\Detector\Strategy\HttpAcceptLanguageStrategy',
+				'yimaLocali\Strategy\UriPathStrategy'    => 'yimaLocali\Detector\UriPathStrategy',
+				'yimaLocali\Strategy\CookieStrategy'     => 'yimaLocali\Detector\CookieStrategy',
+				'yimaLocali\Strategy\RestrictedStrategy' => 'yimaLocali\Detector\RestrictedLocaleStrategy',
+
 				# Translation Table
 				'yimaLocali\I18nTable' => 'yimaLocali\Db\TableGateway\I18n',
-
 			),
 		);
 	}

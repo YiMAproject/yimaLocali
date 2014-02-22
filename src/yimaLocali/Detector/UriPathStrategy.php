@@ -1,27 +1,26 @@
 <?php
-namespace yimaLocali\Detector\Strategy;
+namespace yimaLocali\Detector;
 
 use Zend\Console\Console;
-use yimaLocali\Detector\AbstractDetector;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Mvc\Router\Http\TreeRouteStack;
 
 use yimaLocali\Detector\Feature\SystemUsableInterface;
 
-class UriPathStrategy extends AbstractDetector implements 
+class UriPathStrategy extends DetectorAbstract implements
 	SystemUsableInterface
 {
 	/**
 	 * Request Object
 	 * 
-	 * @var Zend\Http\Request
+	 * @var \Zend\Http\Request
 	 */
 	protected $request;
 	
 	/**
 	 * Router Object
 	 *
-	 * @var Zend\Mvc\Router\Http\TreeRouteStack
+	 * @var \Zend\Mvc\Router\Http\TreeRouteStack
 	 */
 	protected $router;
 	
