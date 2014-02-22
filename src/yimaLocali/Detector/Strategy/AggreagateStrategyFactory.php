@@ -1,12 +1,20 @@
 <?php
-namespace yimaLocali\Mvc\Service;
+namespace yimaLocali\Detector\Strategy;
 
-use yimaLocali\Detector\Strategy\AggreagateStrategy;
+use yimaLocali\Detector\DetectorInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class LocaleDetectorFactory implements FactoryInterface
+class AggreagateStrategyFactory implements
+    FactoryInterface
 {
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return DetectorInterface
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $detector = new AggreagateStrategy();
@@ -20,11 +28,11 @@ class LocaleDetectorFactory implements FactoryInterface
         		if (is_array($config)){
         			foreach ($config as $p => $dtc) {
         				if (is_scalar($dtc)) {
-        					$detector->attach($serviceLocator->get($dtc),$p);
+        					$detector->attach($serviceLocator->get($dtc), $p);
         				} elseif (is_array($dtc)) {
         					if (isset($dtc['invokable'])) {
         						$prio = (isset($dtc['priority'])) ? $dtc['priority'] : -100; 
-        						$detector->attach($serviceLocator->get($dtc['invokable']),$prio);
+        						$detector->attach($serviceLocator->get($dtc['invokable']), $prio);
         					}
         				}
         			}
