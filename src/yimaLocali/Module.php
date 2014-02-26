@@ -1,6 +1,7 @@
 <?php
 namespace yimaLocali;
 
+use yimaLocali\Service\LocaleSupport;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\LocatorRegisteredInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -64,6 +65,20 @@ class Module implements
                 )
             );
         }
+
+        // set Available Locales to Share Service
+        $config = $sm->get('config');
+        if (is_array($config) && isset($config['yimaLocali'])) {
+            $config = $config['yimaLocali'];
+            if (isset($config['available_locales'])) {
+                // set available and supported locales
+                // note: if you want to know one of a reason of this, take a look at uri detector strategy
+                new LocaleSupport($config['available_locales']);
+            }
+        }
+
+
+        // get Locale form detecor
 
         $locale = $detector->getLocale();
         if ($locale) {

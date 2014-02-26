@@ -1,18 +1,14 @@
 <?php
 namespace yimaLocali\Detector;
 
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DetectorAbstract implements DetectorInterface
+abstract class DetectorAbstract implements
+    DetectorInterface,
+    ServiceLocatorAwareInterface
 {
 	protected $serviceLocator;
-	
-	/**
-	 * Locale
-	 * 
-	 * @var string
-	 */
-	protected $locale;
 	
 	/**
 	 * Aliases localies
@@ -25,18 +21,8 @@ class DetectorAbstract implements DetectorInterface
 	 * Get Current Locale based on strategy found in class
 	 *
 	 */
-	public function getLocale()
-	{
-		if ($this->locale) {
-			return $this->locale;
-		}
-		
-		// try to detect locale and set it
-		// ...
-		
-		return $this->locale;
-	}
-		
+	abstract public function getLocale();
+
 	// ......................................................................................................
 	
 	protected function isValidLocale($locale)
@@ -160,5 +146,5 @@ class DetectorAbstract implements DetectorInterface
 	{
 		return $this->serviceLocator;
 	}
-	
+
 }

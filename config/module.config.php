@@ -28,16 +28,20 @@ return array (
             ),
         ),
 
-		'default'    => 'en_US',
-		'supported'  => array(
-			'en_US',
-			'fa_IR',
-		),
-		'aliases'    => array(
-			'en'    => 'en_US',
-			'fa'    => 'fa_IR',
-			'farsi' => 'fa',
-		),
+        # content of this key will pass to LocaleAvailable on Bootstrap
+        'available_locales' => array(
+            'default'    => 'en_US',
+            'locales'  => array(
+                'en_US',
+                'fa_IR',
+            ),
+            'aliases'    => array(
+                'en'    => 'en_US',
+                'fa'    => 'fa_IR',
+                'farsi' => 'fa',
+            ),
+        ),
+
 		# if you need application have a detected locale to run, default false
 		'throw_exception' => false,
 	),
