@@ -14,6 +14,7 @@ use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 
 use yimaLocali\Detector\DetectorInterface;
+use yimaLocali\Detector\Feature\SystemWideInterface;
 
 use Locale as StdLocale;
 
@@ -49,25 +50,23 @@ class Module implements
         $sharedEvents->attach(
             self::EVENT_IDENTIFIER,
             LocaleEvent::EVENT_LOCALE_DETECTED,
-            array($this, 'systemInitializers'),
-            1000000
+            function (LocaleEvent $event) {
+                $locale = $event->getLocale();
+
+                // Set Locale Std Class ----------------------------------------
+                if (class_exists('\Locale', true)) {
+                    // in some host Locale as a PECL maybe not installed
+                    StdLocale::setDefault($locale);
+                }
+
+                // Set Locale to translator ------------------------------------
+                $sm = $event->getServiceLocator();
+
+                $translator = $sm->get('translator');
+                $translator->setLocale($locale);
+            },
+            1000
         );
-    }
-
-    public function systemInitializers(LocaleEvent $event)
-    {
-        $locale = $event->getLocale();
-
-        if (class_exists('\Locale', true)) {
-            // in some host Locale as a PECL maybe not installed
-            StdLocale::setDefault($locale);
-        }
-
-        # reset locale if set before
-        $sm = $event->getServiceLocator();
-
-        $translator = $sm->get('translator');
-        $translator->setLocale($locale);
     }
 
     /**
@@ -122,7 +121,6 @@ class Module implements
             }
         }
 
-        // run events after locale detected --------  {
         if ($detector instanceof AggregateDetectorInterface) {
             // get detector class that detected te locale
 
@@ -130,6 +128,12 @@ class Module implements
             $detector = $detector->getLastStrategyFound();
         }
 
+        if ($detector instanceof SystemWideInterface) {
+            // SystemWide Detectors to take affect to system to work!
+            $detector->doSystemWide();
+        }
+
+        // run events after locale detected --------  {
         $event = new LocaleEvent();
         $event->setLocale($locale)
             ->setDetector($detector)
@@ -206,13 +210,4 @@ class Module implements
             ),
         );
     }
-
-    /*protected function deriveModuleNamespace($controller)
-    {
-    	if (!strstr($controller, '\\')) {
-    		return '';
-    	}
-    	$module = substr($controller, 0, strpos($controller, '\\'));
-    	return $module;
-    }*/
 }
