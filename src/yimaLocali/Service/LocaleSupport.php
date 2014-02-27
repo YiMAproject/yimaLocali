@@ -116,7 +116,15 @@ class LocaleSupport
 	}
 
     /**
-     * Get Locale for an given alias. if not present return false
+     * Get Locale for an given alias. if not present return argument,
+     *
+     * <code>
+     * // to getting locale from string
+     * $string = 'en';
+     * $locale = self::isValidLocale($string)
+     *         ? self::getLocaleFromAlias($string)
+     *         : false;
+     * </code>
      *
      * @param $alias
      *
@@ -129,14 +137,14 @@ class LocaleSupport
 		if (! self::isAlias($alias)) {
 			// we dont have alias to this
 
-			return false;
+			return $alias;
 		}
 
         $locale = $alias;
 		$aliases = self::getAliases();
 		do {
             $locale = $aliases[$locale];
-		} while (self::isAlias($alias));
+		} while (self::isAlias($locale));
 		
 		return $locale;
 	}
