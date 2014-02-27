@@ -68,13 +68,30 @@ class LocaleSupport
             $supported = array();
         }
 
-        if (isset($config['default']) && is_scalar($config['default'])) {
-            if (! in_array($config['default'], $supported)) {
-                array_unshift($supported, $config['default']);
+        if ($defLocale = self::getDefaultLocale()) {
+            if (! in_array($defLocale, $supported)) {
+                array_unshift($supported, $defLocale);
             }
         }
 
         return $supported;
+    }
+
+    /**
+     * Get default locale if present and false otherwise
+     *
+     * @return bool|string
+     */
+    public static function getDefaultLocale()
+    {
+        $return = false;
+
+        $config = self::$localesData;
+        if (isset($config['default']) && is_scalar($config['default'])) {
+            $return = $config['default'];
+        }
+
+        return $return;
     }
 
     /**
@@ -87,7 +104,7 @@ class LocaleSupport
     public static function isValidLocale($locale)
 	{
 		$locale = (string) $locale;
-		$locale = self::getAliasLocale($locale);
+		$locale = self::getLocaleFromAlias($locale);
 		
 		$supported = self::getAvailablesLocale();
 		if (in_array($locale, $supported)) {
@@ -154,4 +171,14 @@ class LocaleSupport
 		
 		return $aliases;
 	}
+
+    /**
+     * Get config locales data
+     *
+     * @return array
+     */
+    public static function getLocalesData()
+    {
+        return self::$localesData;
+    }
 }

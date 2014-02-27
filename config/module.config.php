@@ -16,14 +16,12 @@ return array (
                     */
 
                     // default ordered strategies
-                    'yimaLocali\Strategy\UriPathStrategy' => 90,
-                    'yimaLocali\Strategy\CookieStrategy'  => 80,
-                    /*
+                    //'yimaLocali\Strategy\UriPathStrategy' => 90,
+                    //'yimaLocali\Strategy\CookieStrategy'  => 80,
                     array(
-                        'object'   => new \yimaLocali\Detector\Strategy\RestrictedLocaleStrategy(),
+                        'object'   => new \yimaLocali\Detector\RestrictLocaleStrategy(),
                         'priority' => -1000
                     ),
-                    */
                 ),
             ),
         ),
@@ -43,7 +41,7 @@ return array (
         ),
 
 		# if you need application have a detected locale to run, default false
-		'throw_exception' => false,
+		'throw_exceptions' => false,
 	),
 		
 	'translator' => array(

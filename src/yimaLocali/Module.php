@@ -1,6 +1,8 @@
 <?php
 namespace yimaLocali;
 
+use yimaLocali\Detector\AggreagateStrategy;
+use yimaLocali\Detector\AggregateDetectorInterface;
 use yimaLocali\Service\LocaleSupport;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\LocatorRegisteredInterface;
@@ -12,7 +14,6 @@ use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 
 use yimaLocali\Detector\DetectorInterface;
-use yimaLocali\Detector\Feature\SystemUsableInterface as SystemUsable;
 
 use Locale as StdLocale;
 
@@ -23,6 +24,8 @@ class Module implements
     AutoLoaderProviderInterface,
     LocatorRegisteredInterface
 {
+    const EVENT_IDENTIFIER = 'yimaLocali\Module';
+
     /**
      * Initialize workflow
      *
@@ -41,6 +44,30 @@ class Module implements
             array($this, 'onBootstraping'),
             1000000
         );
+
+        // attach default events
+        $sharedEvents->attach(
+            self::EVENT_IDENTIFIER,
+            LocaleEvent::EVENT_LOCALE_DETECTED,
+            array($this, 'systemInitializers'),
+            1000000
+        );
+    }
+
+    public function systemInitializers(LocaleEvent $event)
+    {
+        $locale = $event->getLocale();
+
+        if (class_exists('\Locale', true)) {
+            // in some host Locale as a PECL maybe not installed
+            StdLocale::setDefault($locale);
+        }
+
+        # reset locale if set before
+        $sm = $event->getServiceLocator();
+
+        $translator = $sm->get('translator');
+        $translator->setLocale($locale);
     }
 
     /**
@@ -77,54 +104,52 @@ class Module implements
             }
         }
 
-
-        // get Locale form detecor
-
+        // get Locale form detector
         $locale = $detector->getLocale();
-        if ($locale) {
-            if ($detector instanceof SystemUsable) {
-                $detector->makeItUsable();
-            }
-
-            // create locale object and register as a service
-            $localeObject = new Locale($locale);
-            # set plugin manager
-            if ($sm->has('yimaLocali\PluginManager')) {
-                $pluginManager = $sm->get('yimaLocali\PluginManager');
-                $localeObject->setPluginManager($pluginManager);
-            }
-
-            $sm->setService('locale', $localeObject);
-
-            /*
-             * Here we register default locale to use around classes of application
-             */
-            if (class_exists('\Locale', true)) {
-                // in some host Locale as a PECL maybe not installed
-                StdLocale::setDefault($locale);
-            }
-
-            # reset locale if set before
-            $translator = $sm->get('translator');
-            $translator->setLocale($locale);
-
-            return;
-        }
-
-        // ..........................................................................................................
-        $config = $sm->get('config');
-        if (is_array($config) && isset($config['yimaLocali'])) {
-            if (isset($config['yimaLocali']['throw_exception'])) {
-                if ($config['yimaLocali']['throw_exception']) {
-                    throw new \Exception(
-                        sprintf(
-                            'No locale found in locale detection by "%s" Detector'
-                            , get_class($detector)
-                        )
-                    );
+        if (!$locale) {
+            $config = $sm->get('config');
+            if (is_array($config) && isset($config['yimaLocali'])) {
+                if (isset($config['yimaLocali']['throw_exceptions'])) {
+                    if ($config['yimaLocali']['throw_exceptions']) {
+                        throw new \Exception(
+                            sprintf(
+                                'No locale found in locale detection by "%s" Detector'
+                                , get_class($detector)
+                            )
+                        );
+                    }
                 }
             }
         }
+
+        // run events after locale detected --------  {
+        if ($detector instanceof AggregateDetectorInterface) {
+            // get detector class that detected te locale
+
+            /** @var $detector AggregateDetectorInterface */
+            $detector = $detector->getLastStrategyFound();
+        }
+
+        $event = new LocaleEvent();
+        $event->setLocale($locale)
+            ->setDetector($detector)
+            ->setServiceLocator($sm);
+
+        /** @var $eventManager \Zend\EventManager\EventManager */
+        $eventManager = $sm->get('eventManager');
+        $eventManager->setIdentifiers(self::EVENT_IDENTIFIER);
+        $eventManager->trigger(LocaleEvent::EVENT_LOCALE_DETECTED, $event);
+        // ... -------- }
+
+        // create locale object and register as a service
+        $localeObject = new Locale($locale);
+        # set plugin manager
+        if ($sm->has('yimaLocali\PluginManager')) {
+            $pluginManager = $sm->get('yimaLocali\PluginManager');
+            $localeObject->setPluginManager($pluginManager);
+        }
+
+        $sm->setService('locale', $localeObject);
     }
 
     /**
@@ -147,9 +172,8 @@ class Module implements
 			),
 			'invokables' => array(
 				# Strategy factories
-				'yimaLocali\Strategy\UriPathStrategy'    => 'yimaLocali\Detector\UriPathStrategy',
-				'yimaLocali\Strategy\CookieStrategy'     => 'yimaLocali\Detector\CookieStrategy',
-				'yimaLocali\Strategy\RestrictedStrategy' => 'yimaLocali\Detector\RestrictedLocaleStrategy',
+				'yimaLocali\Detector\UriPathStrategy'        => 'yimaLocali\Detector\UriPathStrategy',
+				'yimaLocali\Detector\CookieStrategy'         => 'yimaLocali\Detector\CookieStrategy',
 
 				# Translation Table
 				'yimaLocali\I18nTable' => 'yimaLocali\Db\TableGateway\I18n',

@@ -5,11 +5,14 @@ use Countable;
 use IteratorAggregate;
 use Zend\Stdlib\PriorityQueue;
 
-use yimaLocali\Detector\Feature\SystemUsableInterface;
-
-class AggreagateStrategy extends DetectorAbstract implements
-	SystemUsableInterface,
-	Countable, 
+/**
+ * Class AggreagateStrategy
+ *
+ * @package yimaLocali\Detector
+ */
+class AggreagateStrategy implements
+    AggregateDetectorInterface,
+	Countable,
 	IteratorAggregate
 {
 	/**
@@ -18,9 +21,9 @@ class AggreagateStrategy extends DetectorAbstract implements
 	protected $queue;
 	
 	/**
-	 * Last Detector found in Quee
+	 * Last Detector found in Queue
 	 * 
-	 * @var \yimaLocali\Detector\DetectorInterface
+	 * @var DetectorInterface
 	 */
 	protected $lastStrategyFound;
 
@@ -35,14 +38,20 @@ class AggreagateStrategy extends DetectorAbstract implements
 		$this->queue = new PriorityQueue();
 	}
 
-	public function getLocale()
+    /**
+     * Get Current Locale based on strategy found in class
+     *
+     * @return bool|string
+     */
+    public function getLocale()
 	{
 		if (0 === count($this->queue)) {
 			return false;
 		}
 
 		foreach ($this->queue as $detector) {
-			$locale = $detector->getLocale();
+            /** @var $detector DetectorInterface */
+            $locale = $detector->getLocale();
 			if (!$locale) {
 				// No resource found; try next resolver
 				continue;
@@ -50,60 +59,55 @@ class AggreagateStrategy extends DetectorAbstract implements
 
 			// Resource found; return it
 			$this->lastStrategyFound = $detector;
+
 			return $locale;
 		}
 
 		return false;
 	}
 	
-	// Implemented Features ........................................................................................
-	
-	public function makeItUsable()
-	{
-		$lastStrategy = $this->getLastStrategyFound();
-		
-		if ($lastStrategy instanceof SystemUsableInterface) {
-			$lastStrategy->makeItUsable();
-		} 
-		
-		return $this;
-	}
-	
-	// Inside Class Usage ..........................................................................................
-
-	/**
-	 * Return count of attached resolvers
-	 *
-	 * @return int
-	 */
-	public function count()
-	{
-		return $this->queue->count();
-	}
-	
-	/**
-	 * IteratorAggregate: return internal iterator
-	 *
-	 * @return PriorityQueue
-	 */
-	public function getIterator()
-	{
-		return $this->queue;
-	}
-	
-	/**
-	 * Attach a detector stategy
-	 *
-	 */
-	public function attach(DetectorInterface $detector, $priority = 1)
+    /**
+     * Attach Detector to queue list
+     *
+     * @param DetectorInterface $detector
+     * @param int $priority
+     *
+     * @return $this
+     */
+    public function attach(DetectorInterface $detector, $priority = 1)
 	{
 		$this->queue->insert($detector, $priority);
+
 		return $this;
 	}
 
-	public function getLastStrategyFound()
+    /**
+     * Get last detector that detect locale
+     *
+     * @return DetectorInterface
+     */
+    public function getLastStrategyFound()
 	{
 		return $this->lastStrategyFound;
 	}
 
+    /**
+     * Return count of attached resolvers
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->queue->count();
+    }
+
+    /**
+     * IteratorAggregate: return internal iterator
+     *
+     * @return PriorityQueue
+     */
+    public function getIterator()
+    {
+        return $this->queue;
+    }
 }
