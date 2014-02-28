@@ -60,6 +60,15 @@ class AggreagateStrategyFactory implements
                             }
                         }
 
+                        if (!$detector instanceof DetectorInterface) {
+                            throw new \Exception(
+                                sprintf(
+                                    'Invalid Detector Interface, you provided "%s"',
+                                    (is_object($detector)) ? get_class($detector) : gettype($detector).' '.serialize($detector)
+                                )
+                            );
+                        }
+
                         $AggregateStrategy->attach($detector, $priority);
         			}
         		}
