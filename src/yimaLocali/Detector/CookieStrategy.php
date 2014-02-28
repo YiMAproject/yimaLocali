@@ -1,156 +1,177 @@
 <?php
 namespace yimaLocali\Detector;
 
-use yimaLocali\Detector\Feature\SetProgrammabilityLocaleInterface;
-
+use yimaLocali\Service\LocaleSupport;
 use Zend\Console\Console;
 use Zend\Http\Header\Cookie;
 use Zend\Http\Header\SetCookie;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\Http\PhpEnvironment\Response as HttpResponse;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class CookieStrategy extends DetectorAbstract implements
-	SetProgrammabilityLocaleInterface
+class CookieStrategy implements
+    DetectorInterface,
+    ServiceLocatorAwareInterface
+
 {
-    const COOKIE_NAME = 'yimalocali_locale';
+    /**
+     * @var string
+     */
+    protected static $DEFAULT_COOKIE_NAME;
 
     /**
-     * Request Object
-     *
+     * @var string
+     */
+    protected $cookieName;
+
+    /**
      * @var \Zend\Http\Request
      */
     protected $request;
-    
+
     /**
-     * Response Object
+     * @var
      */
     protected $response;
-    
+
+    /**
+     * @var \Zend\ServiceManager\ServiceManager
+     */
+    protected $serviceLocator;
+
+    /**
+     * Get Locale
+     *
+     * @return bool|string
+     */
     public function getLocale()
     {
     	if (Console::isConsole()) {
     		// not supported on console
-    		return;
+    		return false;
     	}
 
-    	$request = $this->getRequest();
-    	
-    	$cookie = $request->getCookie();
-    	if (!$cookie || !$cookie->offsetExists(self::COOKIE_NAME)) {
-    		return;
+        $return = false;
+
+    	$cookie = $this->getRequest()->getCookie();
+    	$locale = $cookie->offsetGet($this->getCookieName());
+    	if (LocaleSupport::isValidLocale($locale)) {
+    		$return = $locale ;
     	}
     	
-    	$locale = $cookie->offsetGet(self::COOKIE_NAME);
-    	if ($this->isValidLocale($locale)) {
-    		return $locale;
-    	}
-    	
-    	return false;
+    	return $return;
     }
-    
-    // Implemented Features ........................................................................................
-    
+
     /**
-     * @param string $locale, null for proxy to resetLocale
-     * 
-     * @throws \Exception
+     * Set name of cookie key
+     *
+     * @param string $name Name of cookie key
+     *
+     * @return $this
      */
-    public function setLocale($locale)
+    public function setCookieName($name)
     {
-    	if (Console::isConsole()) {
-    		// not supported on console
-    		return $this;
-    	}
-    	
-    	$locale = (string) $locale;
-    	if (false == $this->isValidLocale($locale) && !empty($locale)) {
-    		throw new \Exception(sprintf(
-    			'The Locale "%s" not supported and are invalid.', $locale
-    		));
-    	}
-    	
-    	$request = $this->getRequest();
-    	$cookie  = $request->getCookie();
-    	
-    	// Omit Set-Cookie header when cookie is present
-    	if ($cookie instanceof Cookie
-    		&& $cookie->offsetExists(self::COOKIE_NAME)
-    		&& $locale === $cookie->offsetGet(self::COOKIE_NAME)
-    	) {
-    		return;
-    	}
-    	
-    	$response = $this->getResponse();
-    	$cookies  = $response->getCookie();
-    	
-    	$setCookie = new SetCookie(self::COOKIE_NAME, $locale);
-    	$response->getHeaders()->addHeader($setCookie);
-    	
-    	return $this;
+        $this->cookieName = (string) $name;
+
+        return $this;
     }
-    
-    public function resetLocale()
+
+    /**
+     * Return cookie key name
+     *
+     * @return string
+     */
+    public function getCookieName()
     {
-    	return $this->setLocale('');
+        if (!$this->cookieName) {
+            $this->cookieName = self::getDefaultCookieName();
+        }
+
+        return $this->cookieName;
+    }
+
+    /**
+     * Get default cookie name
+     *
+     * @return string
+     */
+    public static function getDefaultCookieName()
+    {
+        if (! self::$DEFAULT_COOKIE_NAME) {
+            self::$DEFAULT_COOKIE_NAME = 'yimalocali.detected.locale';
+        }
+
+        return self::$DEFAULT_COOKIE_NAME;
+    }
+
+    /**
+     * Set default cookie name
+     *
+     * @param string $name
+     */
+    public static function setDefaultCookieName($name)
+    {
+        self::$DEFAULT_COOKIE_NAME = (string) $name;
     }
     
     // Inside Class Usage ..........................................................................................
-    
+
+    /**
+     * Get Request
+     *
+     * @return \Zend\Http\Request
+     *
+     * @throws \Exception
+     */
     public function getRequest()
     {
-    	if ($this->request) {
-    		return $this->request;
-    	}
-    	 
-    	$serviceLocator = $this->getServiceLocator();
-    	if ($serviceLocator->has('request')) {
-    		$request = $serviceLocator->get('Application')->getRequest();
-    	} else {
-    		$request = new HttpRequest();
-    	}
-    	
-    	if (!$request instanceof HttpRequest) {
-    		throw new \Exception(sprintf(
-    			'Request must be instance of "HttpRequest" but "%s" given',get_class($request)
-    		));
-    	}
-    	 
-    	$this->request = $request;
-    	return $this->request;
+        if (!$this->request) {
+            $sm  = $this->getServiceLocator();
+
+            $app = $sm->get('Application');
+            if (!$request = $app->getRequest()) {
+                $request = new HttpRequest();
+            }
+
+            $this->request = $request;
+        }
+
+        return $this->request;
     }
-    
-    public function getResponse()
+
+    /**
+     * Set request
+     *
+     * @param \Zend\Http\Request $request
+     *
+     * @return $this
+     * @throws \Exception
+     */
+    public function setRequest(\Zend\Http\Request $request)
     {
-    	if ($this->response) {
-    		return $this->response;
-    	}
-    
-    	$serviceLocator = $this->getServiceLocator();
-    	if (! $serviceLocator->has('response')) {
-    		return;
-    	}
-    	
-    	$response = $serviceLocator->get('Application')->getResponse();
-    
-    	$this->setResponse($response);
-    	return $this->getResponse();
+        $this->request = $request;
+
+        return $this;
     }
-    
-    public function setResponse($response = null)
+
+    /**
+     * Set service locator
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
-    	# reset request to default
-    	if ($response == null) {
-    		$this->response = null;
-    	}
-     
-    	if (! $response instanceof HttpResponse) {
-    		throw new \Exception(sprintf(
-    		'Request must be instance of "HttpResponse" but "%s" given',get_class($response)
-    		));
-    	}
-     
-    	$this->response = $response;
-    	return $this;
+        $this->serviceLocator = $serviceLocator;
     }
-    
+
+    /**
+     * Get service locator
+     *
+     * @return \Zend\ServiceManager\ServiceManager
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
 }

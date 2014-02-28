@@ -17,7 +17,7 @@ return array (
 
                     // default ordered strategies
                     'yimaLocali\Detector\UriPathStrategy' => 90,
-                    //'yimaLocali\Strategy\CookieStrategy'  => 80,
+                    'yimaLocali\Detector\CookieStrategy'  => 80,
                     array(
                         'object'   => new \yimaLocali\Detector\RestrictLocaleStrategy(),
                         'priority' => -1000
