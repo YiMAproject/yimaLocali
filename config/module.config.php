@@ -26,7 +26,7 @@ return array (
             ),
         ),
 
-        # content of this key will pass to LocaleAvailable on Bootstrap
+        # content of this key will pass to LocaleSupport(class) on Bootstrap
         'available_locales' => array(
             'default'    => 'en_US',
             'locales'  => array(
