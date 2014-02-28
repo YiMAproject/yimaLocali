@@ -31,11 +31,6 @@ class CookieStrategy implements
     protected $request;
 
     /**
-     * @var
-     */
-    protected $response;
-
-    /**
      * @var \Zend\ServiceManager\ServiceManager
      */
     protected $serviceLocator;
