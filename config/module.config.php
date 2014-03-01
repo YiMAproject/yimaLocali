@@ -40,7 +40,7 @@ return array (
             ),
         ),
 
-		# if you need application have a detected locale to run, default false
+		# if you need detected locale before continue of running application
 		'throw_exceptions' => false,
 	),
 

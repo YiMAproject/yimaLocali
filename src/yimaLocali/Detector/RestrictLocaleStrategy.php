@@ -3,6 +3,11 @@ namespace yimaLocali\Detector;
 
 use yimaLocali\Service\LocaleSupport;
 
+/**
+ * Class RestrictLocaleStrategy
+ *
+ * @package yimaLocali\Detector
+ */
 class RestrictLocaleStrategy implements
     DetectorInterface
 {
