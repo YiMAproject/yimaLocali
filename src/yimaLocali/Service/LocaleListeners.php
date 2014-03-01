@@ -137,7 +137,7 @@ class LocaleListeners implements SharedListenerAggregateInterface
         $eventManager->trigger(LocaleEvent::EVENT_LOCALE_DETECTED, $event);
         // ... -------- }
 
-        $sm->setService('yLocale', $locale);
+        $sm->setService('locale.detected', $locale);
     }
 
     /**
