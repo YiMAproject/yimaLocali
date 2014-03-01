@@ -1,9 +1,6 @@
 <?php
 namespace yimaLocali;
 
-use yimaLocali\Detector\AggreagateStrategy;
-use yimaLocali\Detector\AggregateDetectorInterface;
-use yimaLocali\Service\LocaleSupport;
 use yimaLocali\Service\LocaleListeners;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\LocatorRegisteredInterface;
@@ -15,9 +12,6 @@ use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\Mvc\MvcEvent;
 
 use yimaLocali\Detector\DetectorInterface;
-use yimaLocali\Detector\Feature\SystemWideInterface;
-
-use Locale as StdLocale;
 
 class Module implements
     InitProviderInterface,
@@ -55,11 +49,6 @@ class Module implements
 			'factories' => array(
                 # default Locale Detector Strategy, implement DetectorInterface
 				'yimaLocali.Detector.Strategy' => 'yimaLocali\Detector\AggreagateStrategyFactory',
-
-				# managing plugin for locale object
-				'yimaLocali\PluginManager'   => 'yimaLocali\Mvc\Service\PluginManagerFactory',
-
-				'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
 			),
 			'invokables' => array(
 				# Strategy factories

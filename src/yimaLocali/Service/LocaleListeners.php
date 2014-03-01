@@ -4,7 +4,6 @@ namespace yimaLocali\Service;
 use yimaLocali\Detector\AggregateDetectorInterface;
 use yimaLocali\Detector\DetectorInterface;
 use yimaLocali\Detector\Feature\SystemWideInterface;
-use yimaLocali\Locale;
 use yimaLocali\LocaleEvent;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\SharedEventManagerInterface;
@@ -16,7 +15,7 @@ class LocaleListeners implements SharedListenerAggregateInterface
     /**
      * Identifier of Events Triggered in this class
      */
-    const EVENT_IDENTIFIER = 'yimaLocali\Module';
+    const IDENTIFIER_EVENT_LOCALE = 'yimaLocali\Module';
 
     /**
      * @var \Zend\Stdlib\CallbackHandler[]
@@ -41,7 +40,7 @@ class LocaleListeners implements SharedListenerAggregateInterface
 
         // attach Locale Default Events
         $events->attach(
-            self::EVENT_IDENTIFIER,
+            self::IDENTIFIER_EVENT_LOCALE,
             LocaleEvent::EVENT_LOCALE_DETECTED,
             array($this, 'prepareLocale'),
             1000
@@ -71,6 +70,7 @@ class LocaleListeners implements SharedListenerAggregateInterface
     public function onBootstraping(MvcEvent $event)
     {
         $app = $event->getApplication();
+        /** @var $sm \Zend\ServiceManager\ServiceManager */
         $sm  = $app->getServiceManager();
 
         $detector = $sm->get('yimaLocali.Detector.Strategy');
@@ -133,19 +133,11 @@ class LocaleListeners implements SharedListenerAggregateInterface
 
         /** @var $eventManager \Zend\EventManager\EventManager */
         $eventManager = $sm->get('eventManager');
-        $eventManager->setIdentifiers(self::EVENT_IDENTIFIER);
+        $eventManager->setIdentifiers(self::IDENTIFIER_EVENT_LOCALE);
         $eventManager->trigger(LocaleEvent::EVENT_LOCALE_DETECTED, $event);
         // ... -------- }
 
-        // create locale object and register as a service
-        /*$localeObject = new Locale($locale);
-        # set plugin manager
-        if ($sm->has('yimaLocali\PluginManager')) {
-            $pluginManager = $sm->get('yimaLocali\PluginManager');
-            $localeObject->setPluginManager($pluginManager);
-        }
-
-        $sm->setService('locale', $localeObject);*/
+        $sm->setService('yLocale', $locale);
     }
 
     /**
