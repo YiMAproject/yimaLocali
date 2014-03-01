@@ -43,14 +43,17 @@ return array (
 		# if you need application have a detected locale to run, default false
 		'throw_exceptions' => false,
 	),
-		
+
+    // Translator settings
 	'translator' => array(
 		'translation_file_patterns' => array(
 			array(
 				'type'     => 'phparray',
 				'base_dir' => __DIR__ . '/../language',
 				'pattern'  => '%s.php',
-			),
+                //yimaLocali translations using as default Text Domain
+                #'text_domain' => 'default',
+            ),
 		),
 	),
 );

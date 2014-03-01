@@ -162,16 +162,24 @@ class LocaleListeners implements SharedListenerAggregateInterface
         }
 
         // Set Locale Std Class ----------------------------------------
-        if (class_exists('\Locale', true)) {
-            // in some host Locale as a PECL maybe not installed
+        if (extension_loaded('intl')) {
             \Locale::setDefault($locale);
         }
 
-        // Set Locale to translator ------------------------------------
+        // Set Locale for translator ------------------------------------
+        // with setting default locale for translator we don't get exception
+        // - on servers that Intl extension not installed.
         $sm = $event->getServiceLocator();
 
-        $translator = $sm->get('translator');
-        $translator->setLocale($locale);
+        if ($sm->has('MvcTranslator')) {
+            /** @var $translator \Zend\Mvc\I18n\Translator */
+            $translator = $sm->get('MvcTranslator');
+            $translator->setLocale($locale);
+        } elseif ($sm->has('translator')) {
+            /** @var $translator \Zend\I18n\Translator\Translator */
+            $translator = $sm->get('translator');
+            $translator->setLocale($locale);
+        }
 
         return true;
     }
