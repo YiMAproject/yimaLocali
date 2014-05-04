@@ -2,6 +2,7 @@
 namespace yimaLocali\Service;
 
 use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\Config as ServiceManagerConfig;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -143,6 +144,19 @@ class AbstractLocaleHelper implements
 
         // inject locale to all plugin instance
         $pluginManager->addInitializer(array($this, 'injectLocale'));
+
+        // set service config for plugin manager
+        $sl = $this->getServiceLocator();
+        /** @var $sm \Zend\ServiceManager\ServiceManager */
+        $sm = $sl->getServiceLocator();
+        $config = $sm->get('config');
+
+        if (isset($config['yima_locali_plugins'])
+            && is_array($config['yima_locali_plugins'])) {
+            // we have services plugins
+            $configure = new ServiceManagerConfig($config['yima_locali_plugins']);
+            $configure->configureServiceManager($pluginManager);
+        }
 
         $this->pluginManager = $pluginManager;
 

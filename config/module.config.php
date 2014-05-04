@@ -43,4 +43,16 @@ return array (
 		# if you need detected locale before continue of running application
 		'throw_exceptions' => false,
 	),
+
+    # Plugins services for locale() plugin manager
+    # you can catch this plugins within view and controller:
+    #  $this->locale()->test() or $this->plugin('test', $options);
+    'yima_locali_plugins' => array(
+//        'invokables' => array(),
+        /*'factories'  => array(
+            'test' => function ($sm) {
+                    return 'This is test';
+            }
+        ),*/
+    ),
 );

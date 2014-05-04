@@ -2,6 +2,7 @@
 namespace yimaLocali;
 
 use yimaLocali\Service\LocaleListeners;
+use Zend\EventManager\SharedListenerAggregateInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\LocatorRegisteredInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -61,8 +62,8 @@ class Module implements
 			),
 			'invokables' => array(
 				# Strategy factories
-				'yimaLocali\Detector\UriPathStrategy'        => 'yimaLocali\Detector\UriPathStrategy',
-				'yimaLocali\Detector\CookieStrategy'         => 'yimaLocali\Detector\CookieStrategy',
+				'yimaLocali\Detector\UriPathStrategy' => 'yimaLocali\Detector\UriPathStrategy',
+				'yimaLocali\Detector\CookieStrategy'  => 'yimaLocali\Detector\CookieStrategy',
 
 				# Translation Table
 				'yimaLocali\I18nTable' => 'yimaLocali\Db\TableGateway\I18n',
