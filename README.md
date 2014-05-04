@@ -156,6 +156,35 @@ Register The Strategy To Default Aggregate
 
 see [configuration](#config) settings
 
+Plugins for locale(Controller/View)Helper
+-----------
+we can use pluginManager of locale helper and define some plugin or use default plugins.
+
+#### Make new plugin and use it!
+you can take benefit of configuration service for plugins and define your plugin with ```yima_locali_plugins``` merged config key.
+
+```php
+return array(
+'yima_locali_plugins' => array(
+        'factories'  => array(
+            'test' => function ($sm) {
+                return 'This is locale plugin with test name';
+            }
+        ),
+        // 'invokables' => array(),
+        // etc..
+    ),
+);
+```
+and you can catch this from within View or Controller:
+
+```php
+$this->locale()->test();
+// or
+$this->locale()->plugin('test', $parameters);
+```
+
+
 Installation
 -----------
 
