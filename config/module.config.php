@@ -30,8 +30,11 @@ return array (
         'available_locales' => array(
             'default'    => 'en_US',
             'locales'  => array(
-                'en_US',
-                'fa_IR',
+                'en_US', // locale with no options, will use system default
+                'fa_IR' => array(
+                    # these are locale options default data, used or set by other modules
+                    'default_time_zone' => 'Asia/Tehran',
+                ),
             ),
             'aliases'    => array(
                 'en'    => 'en_US',

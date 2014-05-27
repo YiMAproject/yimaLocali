@@ -153,10 +153,15 @@ class LocaleListeners implements SharedListenerAggregateInterface
             return false;
         }
 
-        // Set Locale Std Class ----------------------------------------
+        // Set Locale Std Class -----------------------------------------
         if (extension_loaded('intl')) {
             \Locale::setDefault($locale);
         }
+
+        // Set default time zone ----------------------------------------
+        $localeData = LocaleSupport::getLocaleData($locale);
+        $timezone   = (isset($localeData['default_time_zone'])) ? $localeData['default_time_zone'] : 'UTC';
+        date_default_timezone_set($timezone);
 
         // Set Locale for translator ------------------------------------
         // with setting default locale for translator we don't get exception

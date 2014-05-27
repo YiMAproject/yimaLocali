@@ -58,14 +58,15 @@ class LocaleSupport
      *
      * @return array
      */
-    public static function getAvailablesLocale()
+    public static function getAvailableLocales()
     {
         $config = self::$localesData;
 
+        $supported = array();
         if (isset($config['locales']) && is_array($config['locales'])) {
-            $supported = $config['locales'];
-        } else {
-            $supported = array();
+            foreach($config['locales'] as $l => $d) {
+                $supported[] = (is_scalar($d)) ? (string) $d : $l;
+            }
         }
 
         if ($defLocale = self::getDefaultLocale()) {
@@ -106,7 +107,7 @@ class LocaleSupport
 		$locale = (string) $locale;
 		$locale = self::getLocaleFromAlias($locale);
 		
-		$supported = self::getAvailablesLocale();
+		$supported = self::getAvailableLocales();
 		if (in_array($locale, $supported)) {
             // this is valid locale
 			return true;
@@ -135,7 +136,7 @@ class LocaleSupport
         $alias = (string) $alias;
 		
 		if (! self::isAlias($alias)) {
-			// we dont have alias to this
+			// we don`t have alias to this
 
 			return $alias;
 		}
@@ -180,12 +181,25 @@ class LocaleSupport
 		return $aliases;
 	}
 
+    public static function getLocaleData($locale)
+    {
+        if (!self::isValidLocale($locale)) {
+            throw new \Exception("\"{$locale}\" is not valid locale.");
+        }
+
+        $data = self::getData();
+
+        return (isset($data['locales'][$locale]) && is_array($data['locales'][$locale]))
+            ? $data['locales'][$locale]
+            : array();
+    }
+
     /**
-     * Get config locales data
+     * Get config data
      *
      * @return array
      */
-    public static function getLocalesData()
+    public static function getData()
     {
         return self::$localesData;
     }
