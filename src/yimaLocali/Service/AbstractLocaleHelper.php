@@ -158,6 +158,8 @@ class AbstractLocaleHelper implements
             $configure->configureServiceManager($pluginManager);
         }
 
+        $pluginManager->setServiceLocator($sm);
+
         $this->pluginManager = $pluginManager;
 
         return $this;

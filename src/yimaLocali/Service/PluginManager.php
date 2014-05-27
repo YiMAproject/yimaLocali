@@ -4,6 +4,15 @@ namespace yimaLocali\Service;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
 
+/**
+ * Class PluginManager
+ *
+ * @package yimaLocali\Service
+ *
+ * @note injections implemented inside locale helper class
+ *       and this plugin manager configured from those class
+ * @see \yimaLocali\Service\AbstractLocaleHelper
+ */
 class PluginManager extends AbstractPluginManager
 {
 	/**

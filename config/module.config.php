@@ -31,13 +31,20 @@ return array (
             'default'    => 'en_US',
             'locales'  => array(
                 'en_US', // locale with no options, will use system default
+                'nl_BE', // locale with no options, will use system default
+                'ar_AE' => array(
+                    'calendar'          => 'islamic',
+                ),
                 'fa_IR' => array(
                     # these are locale options default data, used or set by other modules
                     'default_time_zone' => 'Asia/Tehran',
+                    'calendar'          => 'persian',
                 ),
             ),
             'aliases'    => array(
                 'en'    => 'en_US',
+                'ar'    => 'ar_AE',
+                'nl'    => 'nl_BE',
                 'fa'    => 'fa_IR',
                 'farsi' => 'fa',
             ),
