@@ -6,7 +6,7 @@ use Zend\Mvc\Controller\Plugin\PluginInterface;
 use Zend\Stdlib\DispatchableInterface as Dispatchable;
 
 /**
- * Class WidgetLoader
+ * Class Locale
  *
  * @package yimaLocali\Controller\Plugin
  */

@@ -68,6 +68,16 @@ class Module implements
 				# Translation Table
 				'yimaLocali\I18nTable' => 'yimaLocali\Db\TableGateway\I18n',
 			),
+            // Inject Locale for services that implement LocaleInterface
+            'initializers' => array (
+                function ($instance, $sm) {
+                    if ($instance instanceof LocaleAwareInterface) {
+                        $instance->setLocale(
+                            $sm->get('locale.detected')
+                        );
+                    }
+                }
+            ),
 		);
 	}
 
