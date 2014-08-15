@@ -36,10 +36,10 @@ class Module implements
      *
      * @return void
      */
-    public function init(ModuleManagerInterface $moduleManager)
+    public function init(ModuleManagerInterface $moduleModuleManager)
     {
-        /** @var $moduleManager \Zend\ModuleManager\ModuleManager */
-        $events         = $moduleManager->getEventManager();
+        /** @var $moduleModuleManager \Zend\ModuleManager\ModuleManager */
+        $events         = $moduleModuleManager->getEventManager();
         $sharedEvents   = $events->getSharedManager();
 
         /** @var $defltListeners SharedListenerAggregateInterface */

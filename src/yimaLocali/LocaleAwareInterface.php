@@ -4,6 +4,9 @@ namespace yimaLocali;
 /**
  * Interface LocaleInterface
  *
+ * ** Note: Object that implement this interface has locale injected
+ *          by yimaLocali Initializer Service Manager Config
+ *
  * @package yimaLocali
  */
 interface LocaleAwareInterface
@@ -11,7 +14,7 @@ interface LocaleAwareInterface
     /**
      * Set Locale
      *
-     * @param $locale
+     * @param string $locale Locale
      *
      * @return static
      */
