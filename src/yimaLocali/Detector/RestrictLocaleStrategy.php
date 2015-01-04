@@ -1,7 +1,7 @@
 <?php
 namespace yimaLocali\Detector;
 
-use yimaLocali\Service\LocaleSupport;
+use yimaLocali\Service\LocaleRegistry;
 
 /**
  * Class RestrictLocaleStrategy
@@ -33,9 +33,10 @@ class RestrictLocaleStrategy implements
      */
     public function getLocale()
 	{
-		if (!$this->locale) {
-			$this->setLocale(LocaleSupport::getDefaultLocale());
-		}
+		if (!$this->locale)
+			$this->setLocale(
+                LocaleRegistry::getDefaultLocale()
+            );
 
 		return $this->locale;
 	}

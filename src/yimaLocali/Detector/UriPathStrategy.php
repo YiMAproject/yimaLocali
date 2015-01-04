@@ -1,7 +1,7 @@
 <?php
 namespace yimaLocali\Detector;
 
-use yimaLocali\Service\LocaleSupport;
+use yimaLocali\Service\LocaleRegistry;
 
 use Zend\Console\Console;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
@@ -48,9 +48,9 @@ class UriPathStrategy implements
         $locale = false;
 
     	$firstSegment = $this->getRequestFirstSegment();
-    	if (!empty($firstSegment) && localeSupport::isValidLocale($firstSegment)) {
+    	if (!empty($firstSegment) && LocaleRegistry::isValidLocale($firstSegment)) {
             // first segment of request uri is valid locale or alias, exp. /en_US
-    		$locale = localeSupport::getLocaleFromAlias($firstSegment);
+    		$locale = LocaleRegistry::getLocaleFromAlias($firstSegment);
     	}
     	
     	return $locale;

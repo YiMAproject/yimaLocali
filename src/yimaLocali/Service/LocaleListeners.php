@@ -50,7 +50,8 @@ class LocaleListeners implements SharedListenerAggregateInterface
     /**
      * Detach all our listeners from the event manager
      *
-     * @param  EventManagerInterface $events
+     * @param SharedEventManagerInterface $events
+     *
      * @return void
      */
     public function detachShared(SharedEventManagerInterface $events)
@@ -91,7 +92,7 @@ class LocaleListeners implements SharedListenerAggregateInterface
             if (isset($config['available_locales'])) {
                 // set available and supported locales
                 // note: if you want to know one of a reason of this, take a look at uri detector strategy
-                new LocaleSupport($config['available_locales']);
+                new LocaleRegistry($config['available_locales']);
             }
         }
 
@@ -113,17 +114,14 @@ class LocaleListeners implements SharedListenerAggregateInterface
             }
         }
 
-        if ($detector instanceof AggregateDetectorInterface) {
+        if ($detector instanceof AggregateDetectorInterface)
             // get detector class that detected te locale
-
             /** @var $detector AggregateDetectorInterface */
             $detector = $detector->getLastStrategyFound();
-        }
 
-        if ($detector instanceof SystemWideInterface) {
+        if ($detector instanceof SystemWideInterface)
             // SystemWide Detectors to take affect to system to work!
             $detector->doSystemWide();
-        }
 
         // run events after locale detected --------  {
         $event = new LocaleEvent();
@@ -154,12 +152,11 @@ class LocaleListeners implements SharedListenerAggregateInterface
         }
 
         // Set Locale Std Class -----------------------------------------
-        if (extension_loaded('intl')) {
+        if (extension_loaded('intl'))
             \Locale::setDefault($locale);
-        }
 
         // Set default time zone ----------------------------------------
-        $localeData = LocaleSupport::getLocaleData($locale);
+        $localeData = LocaleRegistry::getLocaleData($locale);
         $timezone   = (isset($localeData['default_time_zone'])) ? $localeData['default_time_zone'] : 'UTC';
         date_default_timezone_set($timezone);
 

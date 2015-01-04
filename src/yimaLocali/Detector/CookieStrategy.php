@@ -1,7 +1,7 @@
 <?php
 namespace yimaLocali\Detector;
 
-use yimaLocali\Service\LocaleSupport;
+use yimaLocali\Service\LocaleRegistry;
 use Zend\Console\Console;
 use Zend\Http\PhpEnvironment\Request as HttpRequest;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -49,7 +49,7 @@ class CookieStrategy implements
         /** @var $cookie \Zend\Http\Header\Cookie */
         $cookie = $this->getRequest()->getCookie();
     	$locale = (isset($cookie[$this->getCookieName()])) ? $cookie[$this->getCookieName()] : false;
-    	if ($locale && LocaleSupport::isValidLocale($locale)) {
+    	if ($locale && LocaleRegistry::isValidLocale($locale)) {
     		$return = $locale ;
     	}
     	

@@ -32,7 +32,7 @@ class Module implements
     /**
      * Initialize workflow
      *
-     * @param  ModuleManagerInterface $manager
+     * @param ModuleManagerInterface $moduleModuleManager
      *
      * @return void
      */
