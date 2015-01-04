@@ -30,13 +30,7 @@ return [
         'available_locales' => [
             'default'    => 'en_US',
             'locales'  => [
-                'en_US' => [
-                    # these are locale options default data, used or set by other modules
-                    'default_time_zone' => 'Asia/Tehran',
-                    'calendar'          => 'persian',
-
-                    'rtl'               => true, // used by isRtl() plugin
-                ], // locale with no options, will use system default
+                'en_US', // locale with no options, will use system default
                 'nl_BE', // locale with no options, will use system default
                 'ar_AE' => [
                     'calendar'          => 'islamic',
@@ -74,8 +68,9 @@ return [
                 $lData  = \yimaLocali\Service\LocaleRegistry::getLocaleData($locale);
 
                 $result = (!empty($lData) && isset($lData['rtl']) && $lData['rtl']);
-
-                return function() use ($result) {return $result;};
+                return function() use ($result) {
+                    return $result;
+                };
             }
         ],
     ],
