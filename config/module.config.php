@@ -73,7 +73,9 @@ return [
                 $locale = $sm->get('locale.detected');
                 $lData  = \yimaLocali\Service\LocaleRegistry::getLocaleData($locale);
 
-                return (!empty($lData) && isset($lData['rtl']) && $lData['rtl']);
+                $result = (!empty($lData) && isset($lData['rtl']) && $lData['rtl']);
+
+                return function() use ($result) {return $result;};
             }
         ],
     ],
